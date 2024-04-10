@@ -1,0 +1,10 @@
+apiVersion: k8s.example.com/v1alpha1
+kind: Tenant
+metadata:
+  name: dev-teams
+  namespace: default
+spec:
+  teams:
+    - team-1
+    - team-2
+    - team-3
