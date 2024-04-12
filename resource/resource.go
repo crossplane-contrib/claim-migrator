@@ -31,7 +31,6 @@ func GetResource(ctx context.Context, client dynamic.Interface, ref *v1.ObjectRe
 			return nil, false, nil
 		}
 		return nil, false, err
-
 	}
 	return u, true, nil
 }
@@ -114,7 +113,6 @@ func DeleteSourceClaim(ctx context.Context, client dynamic.Interface, ref *v1.Ob
 
 		_, updateErr := res.Update(ctx, &xrc.Unstructured, metav1.UpdateOptions{})
 		return updateErr
-
 	})
 	if retryUpdateErr != nil {
 		return retryUpdateErr

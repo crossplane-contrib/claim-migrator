@@ -15,7 +15,7 @@ type (
 	debugFlag bool
 )
 
-func (q debugFlag) BeforeApply(ctx *kong.Context) error { //nolint:unparam // BeforeApply requires this signature.
+func (d debugFlag) BeforeApply(ctx *kong.Context) error { //nolint:unparam // BeforeApply requires this signature.
 	logger := logging.NewLogrLogger(zap.New(zap.UseDevMode(true)))
 	ctx.BindTo(logger, (*logging.Logger)(nil))
 	return nil
@@ -24,7 +24,7 @@ func (q debugFlag) BeforeApply(ctx *kong.Context) error { //nolint:unparam // Be
 type cli struct {
 	Migrate migrate.Cmd `cmd:"" help:"Migrate Crossplane Claims to a new namespace."`
 
-	Debug debugFlag `short:"d" optional:"" help:"(Optional) Suppress output."`
+	Debug debugFlag `short:"d" optional:"" help:"(Optional) Verbose logging."`
 }
 
 func main() {
