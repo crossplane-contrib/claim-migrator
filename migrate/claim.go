@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	errCreateDestClaim        = "cannot create destination claim "
+	errSourceClaimNotFound    = "source Claim not found"
+	errCreateDestClaim        = "cannot create destination Claim "
 	errGetResource            = "cannot get requested resource"
 	errKubeConfig             = "failed to get kubeconfig"
 	errGetMapping             = "cannot get mapping for resource"
@@ -80,7 +81,7 @@ func (c *Cmd) Run(logger logging.Logger) error {
 	if !re {
 		return errors.Errorf("❌ cannot create new claim, namespace %s does not exist", c.DestNamespace)
 	}
-	logger.Info("✅ destination namespace exists")
+	logger.Debug("✅ destination namespace exists")
 
 	rmapper, err := resource.NewRestMapper(kubeconfig)
 	if err != nil {
@@ -112,10 +113,10 @@ func (c *Cmd) Run(logger logging.Logger) error {
 		return errors.Wrap(err, errGetResource)
 	}
 	if !re {
-		logger.Info("❌ source Claim not found")
-		return errors.Wrap(err, "source Claim not found")
+		logger.Debug("❌ source Claim not found")
+		return errors.New(errSourceClaimNotFound)
 	}
-	logger.Info("✅ source Claim exists")
+	logger.Debug("✅ source Claim exists")
 
 	dstClaimRef := &v1.ObjectReference{
 		Kind:       mapping.GroupVersionKind.Kind,
@@ -155,8 +156,8 @@ func (c *Cmd) Run(logger logging.Logger) error {
 	if err != nil {
 		return errors.Wrap(err, "unable to update composite")
 	}
-	logger.Info("✅ XR updated with new Claim", "name", xr.Name)
-	logger.Info("✅ Migration complete")
+	logger.Debug("✅ XR updated with new Claim", "name", xr.Name)
+	logger.Debug("✅ Migration complete")
 
 	// Delete the Source Claim
 	err = resource.DeleteSourceClaim(ctx, dynamicClient, srcClaimRef)
